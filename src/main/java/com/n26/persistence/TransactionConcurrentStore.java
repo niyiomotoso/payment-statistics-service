@@ -1,8 +1,11 @@
 package com.n26.persistence;
 
+import com.n26.models.Statistics;
 import com.n26.models.Transaction;
+import com.n26.utils.PayloadValidator;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 
 public class TransactionConcurrentStore  {
@@ -23,8 +26,27 @@ public class TransactionConcurrentStore  {
 
 
     public boolean saveNewTransaction(Transaction payload){
+        boolean added = transactions.add(payload);
 
-        return transactions.add(payload);
+        new Thread(){
+            public void run(){
+                System.out.println("Thread Running");
+                ListIterator<Transaction> iterator = transactions.listIterator();
+
+                while (iterator.hasNext() ){
+                    Transaction transaction = iterator.next();
+
+                    //remove transactions older than 60 seconds
+                    if( PayloadValidator.timeDiffFromNowCalculator(transaction.getTimestamp()) >= 60){
+                        iterator.remove();
+                        System.out.println("removed ");
+
+                    }
+                }
+            }
+        }.start();
+
+        return added;
     }
 
 

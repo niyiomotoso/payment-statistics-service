@@ -13,14 +13,6 @@ public class Statistics implements Serializable {
     private long count;
 
 
-//    public Statistics(String sum, String avg, String max, String min, long count) {
-//        this.sum = sum;
-//        this.avg = avg;
-//        this.max = max;
-//        this.min = min;
-//        this.count = count;
-//    }
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
